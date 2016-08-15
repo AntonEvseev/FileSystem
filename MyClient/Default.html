@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="myapp">
+<head>
+    <title>File System</title>
+    <script src="Scripts/angular.min.js"></script>
+</head>
+<body ng-controller="FileInfoesController">
+   
+    <h2>qwe</h2>
+    <ul ng-repeat="FileInfo in li">
+        <li>
+            {{FileInfo.Name}}
+        </li>
+    </ul>
+
+
+
+        <script type="text/javascript">
+            var myapp = angular.module("myapp", [])
+            myapp.controller("FileInfoesController", function ($scope, $http) {
+                $http.get("http://localhost:58303/api/FileInfoes").success(function (response) {
+                    $scope.li = response;
+                });
+            });
+        </script>
+
+</body>
+</html>
