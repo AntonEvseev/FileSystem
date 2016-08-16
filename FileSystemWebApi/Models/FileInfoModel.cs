@@ -7,109 +7,248 @@ using System.Web;
 
 namespace FileSystemWebApi.Models
 {
-    public class FileInfoModel
+    public class FileInfoDataModel
     {
-        public List<FileInfo> findAll()
+        public List<FileInfoData> findAll()
         {
-            List<FileInfo> li =new List<FileInfo>();
+            List<FileInfoData> li = new List<FileInfoData>();
             DriveInfo[] allDrives = DriveInfo.GetDrives();
             foreach (DriveInfo d in allDrives)
             {
                 if (d.DriveType == DriveType.Fixed)
                 {
-                    li.Add(new FileInfo { Name = d.Name});
+                    
+                    li.Add(new FileInfoData { DirectoryName = d.Name, Puth = "" });
                 }
             }
-
-            //string sDir = @"D:\";
-            //string[] ReultSearch = Directory.GetDirectories(sDir);
-            //foreach (string f in ReultSearch)
-            //{
-            //    li.Add(new FileInfo { Name = f });
-            //}
-            //li.Add(new FileInfo { SizeSmall = ReultSearch.Length, Puth = sDir });
-              
-
-            //return li;}
-            //public List<FileInfo> DirSearch(string sDir)
-            //{
-            //    List<FileInfo> li =new List<FileInfo>();
-            //    try
-            //    {
-            //        foreach (string d in Directory.GetDirectories(sDir))
-            //        {
-            //            foreach (string f in Directory.GetFiles(d, "."))
-            //            {
-            //                li.Add(new FileInfo { Name = f, SizeSmall = f.Length }); 
-            //            }
-            //            DirSearch(d);
-            //        }
-            //    }
-            //    catch (System.Exception excpt)
-            //    {
-            //        Console.WriteLine(excpt.Message);
-            //    }
-            //    return li;
-            //}
-
-            //try
-            //{
-            //    //System.IO.DirectoryInfo number = new System.IO.DirectoryInfo(@"D:\");
-            //    //string sourceDirectory = @"D:\Фото бабушка";
-            //    var files = Directory.EnumerateFiles(@"D:\Фото бабушка", "*.", SearchOption.AllDirectories);
-                
-            //    //int count = number.GetFiles(".", SearchOption.AllDirectories).Length;
-            //    string[] dirs = Directory.GetFiles(@"D:\Фото бабушка", "*.", SearchOption.AllDirectories);
-            //li.Add(new FileInfo {Name = "qwe", SizeSmall = files.Count()  }); 
-            //}
-            //catch { }
-
-            
-            //foreach (DriveInfo d in allDrives)
-            //{
-            //    if(d.DriveType == DriveType.Fixed){
-
-            //        System.IO.DirectoryInfo number = new System.IO.DirectoryInfo(@d.Name);
-            //        int count = number.GetFiles().Length;
-            //        string[] dirs = Directory.GetFiles(@"c:\", ".", SearchOption.AllDirectories);
-            //        string[] dirs = Directory.GetFiles(@"D:\", "*.", SearchOption.AllDirectories);
-            //    li.Add(new FileInfo { Name = d.Name, SizeSmall = dirs.Length, Puth = d.Name});
-            //    }
-            //}
-            
-            //string[] dirs = Directory.GetFiles(@"d:\Фото бабушка");
-            //foreach (string dir in dirs)
-            //{
-                
-            //        li.Add(new FileInfo { SizeSmall = dirs.Length });
-                
-            //}
-            //foreach (DriveInfo d in allDrives)
-            //{
-            //    try
-            //    {
-            //       li.Add( new FileInfo {SizeSmall = (d.Name, "*.*").Count});
-            //    }
-            //    catch (Exception err) { e.Result = err.Message; }
-            //}
-            
-            
-            
             return li;
         }
 
-
-        public List<FileInfo> findAll(string id)
+        public List<FileInfoData> findAll(string id)
         {
-            List<FileInfo> li = new List<FileInfo>();
+            List<FileInfoData> li = new List<FileInfoData>();
             string sDir = id;
-
             List<string> dirs = new List<string>(Directory.EnumerateDirectories(sDir));
             foreach (var dir in dirs)
                     {
-                        li.Add(new FileInfo { Puth = id, Name = dir.Substring(dir.LastIndexOf("\\") + 1) });
+                        li.Add(new FileInfoData { Puth = sDir + "/",  DirectoryName = dir.Substring(dir.LastIndexOf("\\") + 1) });
                     }
+            //new
+            DirectoryInfo directory = new DirectoryInfo(id);
+            foreach (FileInfo file in directory.GetFiles())
+            {
+                li.Add(new FileInfoData { FileName = file.Name, Puth = file.DirectoryName});
+            }
+            //подсчет файлов
+            var filesTop = Enumerable.Empty<FileInfo>();
+            var filesAll = Enumerable.Empty<FileInfo>();
+            try
+            {
+                var root = new DirectoryInfo(sDir);
+                if (sDir.Count() > 3)
+                {
+                    filesTop = root.EnumerateFiles(".", SearchOption.AllDirectories);
+                    var filesSmall = filesTop.Where(fi => fi.Length <= 10485760).Count();
+                    var filesBig = filesTop.Where(fi => fi.Length > 104857600).Count();
+                    var filesMiddle = filesTop.Where(fi => fi.Length > 10485760 && fi.Length < 52428800).Count();
+
+                    li.Add(new FileInfoData { SizeSmall = filesSmall, SizeBig = filesBig, SizeMiddle = filesMiddle });
+                }
+                else
+                {
+                    filesTop = root.EnumerateFiles(".", SearchOption.TopDirectoryOnly);
+                    li.Add(new FileInfoData { SizeSmall = filesTop.Count() });
+                }
+            }
+            catch (UnauthorizedAccessException) { }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                           //start ols code
+            ////Вывод списка файлов в каталоге
+            //DriveInfo di = new DriveInfo(sDir);
+            //DirectoryInfo dirInfo = di.RootDirectory;
+            //FileInfo[] fileNames = dirInfo.GetFiles("*.*");
+            //foreach (System.IO.FileInfo fi in fileNames)
+            //{
+            //    li.Add(new FileInfoData { FileName = fi.Name });
+            //}
+
+
+
+            //Подсчет файлов
+            //var filesTop = Enumerable.Empty<FileInfo>();
+            //var filesAll = Enumerable.Empty<FileInfo>();
+            //try
+            //{
+            //    var root = new DirectoryInfo(sDir);
+            //    if (sDir.Count() > 3)
+            //    {
+            //        filesTop = root.EnumerateFiles(".", SearchOption.AllDirectories);
+            //        var filesSmall = filesTop.Where(fi => fi.Length <= 10485760).Count();
+            //        var filesBig = filesTop.Where(fi => fi.Length > 104857600).Count();
+            //        var filesMiddle = filesTop.Where(fi => fi.Length > 10485760 && fi.Length < 52428800).Count();
+
+            //        li.Add(new FileInfoData { SizeSmall = filesSmall, SizeBig = filesBig, SizeMiddle = filesMiddle });
+            //    }
+            //    else
+            //    {
+            //        filesTop = root.EnumerateFiles(".", SearchOption.TopDirectoryOnly);
+            //        li.Add(new FileInfoData { SizeSmall = filesTop.Count() });
+            //    }
+            //}
+            //catch (UnauthorizedAccessException) { }
+                                                 //end old code!
+
+
+            
+            //DirectoryInfo direc = new DirectoryInfo(sDir);
+            ////Вывод списка файлов в каталоге
+            //DirectoryInfo[] directories = direc.GetDirectories(".");
+            //foreach (DirectoryInfo subDirectory in directories)
+            //{
+
+            //    FileInfo[] filesSubDir = subDirectory.GetFiles("*.*");
+            //    foreach (FileInfo fi in filesSubDir)
+            //    {
+
+            //        li.Add(new FileInfoData { FileName = fi.Name });
+            //    }
+
+            //}
+            //DriveInfo di = new DriveInfo(sDir);
+            //DirectoryInfo dirInfo = di.RootDirectory;
+            //FileInfo[] fileNames = dirInfo.GetFiles("*.*");
+            //foreach (System.IO.FileInfo fi in fileNames)
+            //{
+            //    li.Add(new FileInfoData { SizeSmall = fi.Length.ToString()});
+            //}
+            //System.IO.DirectoryInfo[] dirInfos = dirInfo.GetDirectories("*.*");
+            //string currentDirName = System.IO.Directory.GetCurrentDirectory();
+            //string[] files = System.IO.Directory.GetFiles(currentDirName, "*.txt");
+            //foreach (string s in files)
+            //{
+            //    // Create the FileInfo object only when needed to ensure
+            //    // the information is as current as possible.
+            //    System.IO.FileInfo fi = null;
+            //    try
+            //    {
+            //        fi = new System.IO.FileInfo(s);
+                    
+            //    }
+            //    catch (System.IO.FileNotFoundException e)
+            //    {
+                    
+            //        continue;
+            //    }
+               
+            //    li.Add(new FileInfoData { SizeMiddle = fi.Length, SizeSmall = files.Length });
+            //}
+            //try
+            //{
+            //    var direct = new DirectoryInfo(sDir);
+            //    var filesSmall = direct.EnumerateFiles(".", SearchOption.AllDirectories).Where(fi => fi.Length < 10485760);
+            //    var filesBig = direct.EnumerateFiles(".", SearchOption.AllDirectories).Where(fi => fi.Length > 104857600);
+            //    var filesMiddle = direct.EnumerateFiles(".", SearchOption.AllDirectories).Where(fi => fi.Length > 10485760 && fi.Length < 52428800);
+            //    li.Add(new FileInfoData { SizeSmall = filesSmall.Count(), SizeBig = filesBig.Count(), SizeMiddle = filesMiddle.Count() });
+            //}
+            //catch (System.Exception excpt)
+            //{
+            //    li.Add(new FileInfoData { Error = "dfdf" });
+            //}
+           //подсчет файлов в каталоге
+
+
+            //рабочий код
+            //var filesTop = Enumerable.Empty<FileInfo>();
+            //var filesAll = Enumerable.Empty<FileInfo>();
+            //try
+            //{
+            //    var root = new DirectoryInfo(sDir);
+            //    filesAll = root.EnumerateFiles(".", SearchOption.AllDirectories);
+            //    filesTop = root.EnumerateFiles(".", SearchOption.TopDirectoryOnly);
+            //    var filesSmall = (filesTop.Where(fi => fi.Length < 10485760)).Count() + (filesAll.Where(fi => fi.Length < 10485760)).Count();
+            //    var filesBig = (filesTop.Where(fi => fi.Length > 104857600)).Count() + (filesAll.Where(fi => fi.Length > 104857600)).Count();
+            //    var filesMiddle = (filesTop.Where(fi => fi.Length > 10485760 && fi.Length < 52428800)).Count() + (filesAll.Where(fi => fi.Length > 10485760 && fi.Length < 52428800)).Count();
+            //    //var filesSmall2 =
+            //    //var filesBig2 = ;
+            //    //var filesMiddle2 = ;
+            //    li.Add(new FileInfoData { SizeSmall = filesSmall, SizeBig = filesBig, SizeMiddle = filesMiddle });
+            //}
+            //catch (UnauthorizedAccessException) { }
+
+          
+
+            
+
+            //var direct = new DirectoryInfo(sDir);
+            //var files = direct.EnumerateFiles(".").Where(fi => fi.Length > 100000);
+            //li.Add(new FileInfoData { SizeSmall = files.Count() });
+
+            
+            //var files = direc.EnumerateFiles("*.").Where(fi => fi.Length > 100000);
+            //li.Add(new FileInfoData { SizeSmall = files.Count() });
+
+
+
+           
+            
+            //DirectoryInfo[] directories = direc.GetFiles();
+            //foreach (DirectoryInfo subDirectory in directories)
+            //{
+
+            //    FileInfo[] filesSubDir = subDirectory.GetFiles("*.*");
+            //    foreach (FileInfo fi in filesSubDir)
+            //    {
+
+            //        li.Add(new FileInfoData { FileName = fi.Name });
+            //    }
+
+            //}
             return li;
         }
+
+       
+
+        //public static int GetAllF(string sDir)
+        //{
+        //    int a = 0;
+        //    foreach (string dir in Directory.GetDirectories(sDir))
+        //    {
+        //        try
+        //        {
+        //            foreach (string file in Directory.GetFiles(dir, ".", SearchOption.AllDirectories))
+        //            {
+                        
+        //              a = file.Count();
+                       
+        //            }
+        //            GetAllF(dir);
+        //        }
+        //        catch (UnauthorizedAccessException)
+        //        {
+
+        //        }
+                
+        //    }
+        //    return a;
+        //}
+        
+        
+       
+        
     }
 }

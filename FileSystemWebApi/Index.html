@@ -3,6 +3,7 @@
 <head>
     <title>File System</title>
     <script src="Scripts/angular.min.js"></script>
+    <style>li{list-style-type: none;}</style>
 </head>
 <body ng-controller="FileInfoesController">
     <table border="1">
@@ -13,31 +14,45 @@
         </tr>
         <tr ng-repeat="FileInfo in li">
             <th>{{FileInfo.SizeSmall}}</th>
-            <th></th>
-            <th></th>
+            <th>{{FileInfo.SizeMiddle}}</th>
+            <th>{{FileInfo.SizeBig}}</th>
         </tr>
     </table>
+    
+ 
+    {{Error}}
     <br />
-    <p ng-repeat="FileInfo in li">Current path: {{FileInfo.Puth}}</p>
+    Current path: <span  ng-bind="li[1].Puth">{{FileInfo.Puth}}</span>
     <br />
+    
     <ul ng-repeat="FileInfo in li">
         <li>
-            <a href="" ng-click="someMethod(FileInfo.Name)">{{FileInfo.Name}}</a>
+            <a href="" ng-click="someMethod(FileInfo.Puth + FileInfo.DirectoryName)">{{FileInfo.DirectoryName}}</a>
         </li>
     </ul>
+    <ul ng-repeat="FileInfo in li">
+        <li>
+            <span>{{FileInfo.FileName}}</span>
+        </li>
+    </ul>
+   
+    
+    
      <script type="text/javascript">
         var myapp = angular.module("myapp", [])
         myapp.controller("FileInfoesController", function ($scope, $http) {
-            $http.get("http://localhost:58303/api/FileInfoes").success(function (response) {
+            $http.get("http://localhost:58303/api/FileInfoDataes").success(function (response) {
                 $scope.li = response;
             });
             
-            
+        
             $scope.someMethod = function (path) {
-                $http.get("http://localhost:58303/api/FileInfoes/findAll?id=" + path).success(function (response) {
+                
+                $http.get("http://localhost:58303/api/FileInfoDataes/findAll?id=" + path).success(function (response) {
                         $scope.li = response;
                    });
             };
+        
         });
         
        

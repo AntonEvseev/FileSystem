@@ -5,10 +5,14 @@ using System.Web;
 
 namespace FileSystemWebApi.Models
 {
-    public class FileInfo
+    public class FileInfoData
     {
-        public string Name { get; set; }
+        public string DirectoryName { get; set; }
         public int SizeSmall { get; set; }
+        public int SizeBig { get; set; }
+        public int SizeMiddle { get; set; }
         public string Puth { get; set; }
+        public string FileName { get; set; }
+        public string Error { get; set; }
     }
 }

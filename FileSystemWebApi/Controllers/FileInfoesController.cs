@@ -6,25 +6,25 @@ using System.Net.Http;
 using System.Web.Http;
 using FileSystemWebApi.Controllers;
 using FileSystemWebApi.Models;
-//using System.IO;
+
 
 namespace FileSystemWebApi.Controllers
 {
-    public class FileInfoesController : ApiController
+    public class FileInfoDataesController : ApiController
     {
         // GET: api/FileInfoes
-        public IEnumerable<FileInfo> Get()
+        public IEnumerable<FileInfoData> Get()
         {
-            FileInfoModel fim = new FileInfoModel();
-            return fim.findAll().AsEnumerable();
+            FileInfoDataModel fidm = new FileInfoDataModel();
+            return fidm.findAll().AsEnumerable();
         }
 
         // GET: api/FileInfoes/5
-        public IEnumerable<FileInfo> Get(string id)
+        public IEnumerable<FileInfoData> Get(string id)
         {
-            List<FileInfo> li = new List<FileInfo>();
-            FileInfoModel fim = new FileInfoModel();
-            return fim.findAll(id).AsEnumerable();
+            List<FileInfoData> li = new List<FileInfoData>();
+            FileInfoDataModel fidm = new FileInfoDataModel();
+            return fidm.findAll(id).AsEnumerable();
 
 
 
