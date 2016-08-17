@@ -17,7 +17,6 @@ namespace FileSystemWebApi.Models
             {
                 if (d.DriveType == DriveType.Fixed)
                 {
-                    
                     li.Add(new FileInfoData { DirectoryName = d.Name, Puth = "" });
                 }
             }
@@ -33,7 +32,6 @@ namespace FileSystemWebApi.Models
                     {
                         li.Add(new FileInfoData { Puth = sDir + "/",  DirectoryName = dir.Substring(dir.LastIndexOf("\\") + 1) });
                     }
-            //new
             DirectoryInfo directory = new DirectoryInfo(id);
             try
             {
@@ -59,14 +57,37 @@ namespace FileSystemWebApi.Models
                 }
                 else
                 {
-                    //filesTop = root.EnumerateFiles(".", SearchOption.TopDirectoryOnly);
-                    //li.Add(new FileInfoData { SizeSmall = filesTop.Count() });
+                    List<string> sop = new List<string>();
+                    IEnumerable<string> files = EnumerateAllFiles(sDir, ".");
+                    int countSmall = 0;
+                    int countMiddle = 0;
+                    int countBig = 0;
                     
-                    li.Add(new FileInfoData { SizeSmall = EnumerateAllFiles(sDir, ".").Where(fi => fi.Length <= 10485760).Count() });
-                }  
+                        foreach (string file in files)
+                        {
+                            FileInfo fi = new FileInfo(file);
+                            
+                            try
+                            {
+                                if (fi.Length < 10485760)
+                                {
+                                    countSmall++;
+                                }
+                                if (fi.Length > 10485760 && fi.Length < 52428800)
+                                {
+                                    countMiddle++;
+                                }
+                                if (fi.Length > 104857600)
+                                {
+                                    countBig++;
+                                }
+                            }
+                            catch { }
+                        }
+                        li.Add(new FileInfoData { SizeSmall = countSmall, SizeMiddle = countMiddle, SizeBig = countBig });
+                        }  
             }
             catch (UnauthorizedAccessException) { li.Add(new FileInfoData { Error = "Доступ к этой папке закрыт!Для просмотра этой папки нужны права администратора!" }); }
-            //li.Add(new FileInfoData { Error = "dsfsdfsdfsdfsdfsdfsdf");
             return li;
         }
 
@@ -90,5 +111,5 @@ namespace FileSystemWebApi.Models
                 }
             }
         }
-    }
+   }
 }
