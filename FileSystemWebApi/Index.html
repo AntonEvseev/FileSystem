@@ -6,6 +6,18 @@
     <style>li{list-style-type: none;}</style>
 </head>
 <body ng-controller="FileInfoesController">
+    <!--<table border="1">
+        <tr>
+            <th>Less 10Mb</th>
+            <th>10Mb-50Mb</th>
+            <th>More 100Mb</th>
+        </tr>
+        <tr ng-repeat="FileInfo in li">
+            <th>{{FileInfo.SizeSmall}}</th>
+            <th>{{FileInfo.SizeMiddle}}</th>
+            <th>{{FileInfo.SizeBig}}</th>
+        </tr>
+    </table>-->
     <table border="1">
         <tr>
             <th>Less 10Mb</th>
@@ -18,11 +30,10 @@
             <th>{{FileInfo.SizeBig}}</th>
         </tr>
     </table>
-    
- 
-    {{Error}}
+
+    <p ng-repeat="FileInfo in li">{{FileInfo.Error}}</p>
     <br />
-    Current path: <span  ng-bind="li[1].Puth">{{FileInfo.Puth}}</span>
+    Current path: <span  ng-bind="li[0].Puth">{{FileInfo.Puth}}</span>
     <br />
     
     <ul ng-repeat="FileInfo in li">
@@ -36,7 +47,7 @@
         </li>
     </ul>
    
-    
+    <a href="" ng-click="linM(FileInfo.DirectoryName)">qwe</a>
     
      <script type="text/javascript">
         var myapp = angular.module("myapp", [])
@@ -53,6 +64,13 @@
                    });
             };
         
+            $scope.linM = function (path) {
+
+                $http.post("http://localhost:58303/api/FileInfoDataes/findAll?id=" + path).success(function (response) {
+                    $scope.li = response;
+                });
+            };
+
         });
         
        
