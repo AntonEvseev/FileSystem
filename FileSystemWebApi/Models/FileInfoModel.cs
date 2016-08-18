@@ -81,12 +81,12 @@ namespace FileSystemWebApi.Models
                                     countBig++;
                                 }
                             }
-                            catch { }
+                            catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно количество файлов, т.к. есть файлы превышающие длину пути в 260 символов! Скачай другую версию программы https://github.com/AntonEvseev/FileSystemWithoutReflection =)" }); }
                         }
                         li.Add(new FileInfoData { SizeSmall = countSmall, SizeMiddle = countMiddle, SizeBig = countBig });
                         }  
             }
-            catch (UnauthorizedAccessException) { li.Add(new FileInfoData { Error = "Доступ к этой папке закрыт!Для просмотра этой папки нужны права администратора!" }); }
+            catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно количество файлов, т.к. есть файлы превышающие длину пути в 260 символов! Скачай другую версию программы https://github.com/AntonEvseev/FileSystemWithoutReflection =)" }); }
             return li;
         }
 
