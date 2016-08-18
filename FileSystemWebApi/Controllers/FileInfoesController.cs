@@ -20,16 +20,8 @@ namespace FileSystemWebApi.Controllers
 
         public IEnumerable<FileInfoData> Get(string id)
         {
-            List<FileInfoData> li = new List<FileInfoData>();
             FileInfoDataModel fidm = new FileInfoDataModel();
             return fidm.findAll(id).AsEnumerable();
         }
-
-        //public IEnumerable<FileInfoData> Post(string id)
-        //{
-        //    FileInfoDataModel fidm = new FileInfoDataModel();
-        //    return fidm.findAllP(id).AsEnumerable();
-        //}
-        
     }
 }

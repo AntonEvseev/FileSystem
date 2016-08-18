@@ -57,7 +57,6 @@ namespace FileSystemWebApi.Models
                 }
                 else
                 {
-                    List<string> sop = new List<string>();
                     IEnumerable<string> files = EnumerateAllFiles(sDir, ".");
                     int countSmall = 0;
                     int countMiddle = 0;
@@ -111,5 +110,16 @@ namespace FileSystemWebApi.Models
                 }
             }
         }
+
+        
+
+
+
+
+
+
+
+
+       
    }
 }
