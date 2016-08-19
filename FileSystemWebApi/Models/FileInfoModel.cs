@@ -28,19 +28,26 @@ namespace FileSystemWebApi.Models
             List<FileInfoData> li = new List<FileInfoData>();
             string sDir = id;
             List<string> dirs = new List<string>(Directory.EnumerateDirectories(sDir));
-            foreach (var dir in dirs)
-                    {
-                        li.Add(new FileInfoData { Puth = sDir + @"\", DirectoryName = dir.Substring(dir.LastIndexOf("\\") + 1), BackStap = ".." });
-                    }
-            DirectoryInfo directory = new DirectoryInfo(id);
-            try
+            if (dirs.Count > 0)
             {
-                foreach (FileInfo file in directory.GetFiles())
+                foreach (var dir in dirs)
                 {
-                    li.Add(new FileInfoData { FileName = file.Name, Puth = file.DirectoryName, BackStap = ".." });
+                    li.Add(new FileInfoData { Puth = sDir + @"\", DirectoryName = dir.Substring(dir.LastIndexOf("\\") + 1), BackStap = ".." });
                 }
             }
-            catch (UnauthorizedAccessException) { li.Add(new FileInfoData { Error = "Доступ к этой папке закрыт!Для просмотра этой папки нужны права администратора!" }); }
+            else
+            {
+                li.Add(new FileInfoData { Puth = sDir + @"\", BackStap = ".." });
+            }
+                DirectoryInfo directory = new DirectoryInfo(id);
+                try
+                {
+                    foreach (FileInfo file in directory.GetFiles())
+                    {
+                        li.Add(new FileInfoData { FileName = file.Name, Puth = file.DirectoryName, BackStap = ".." });
+                    }
+                }
+                catch (UnauthorizedAccessException) { li.Add(new FileInfoData { Error = "Доступ к этой папке закрыт!Для просмотра этой папки нужны права администратора!" }); }
             //подсчет файлов
             var filesTop = Enumerable.Empty<FileInfo>();
             var filesAll = Enumerable.Empty<FileInfo>();
@@ -61,7 +68,7 @@ namespace FileSystemWebApi.Models
                     int countSmall = 0;
                     int countMiddle = 0;
                     int countBig = 0;
-                    
+ 
                         foreach (string file in files)
                         {
                             FileInfo fi = new FileInfo(file);
@@ -81,12 +88,12 @@ namespace FileSystemWebApi.Models
                                     countBig++;
                                 }
                             }
-                            catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно количество файлов, т.к. есть файлы превышающие длину пути в 260 символов! Скачай другую версию программы https://github.com/AntonEvseev/FileSystemWithoutReflection =)" }); }
+                            catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно общее количество файлов на этом диске, т.к. есть файлы превышающие длину пути в 260 символов! Чтобы быстрее работать с этим диском можно скачать другую версию программы https://github.com/AntonEvseev/FileSystemWithoutRecursion =)" }); }
                         }
                         li.Add(new FileInfoData { SizeSmall = countSmall, SizeMiddle = countMiddle, SizeBig = countBig });
                         }  
             }
-            catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно количество файлов, т.к. есть файлы превышающие длину пути в 260 символов! Скачай другую версию программы https://github.com/AntonEvseev/FileSystemWithoutReflection =)" }); }
+            catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно общее количество файлов на этом диске, т.к. есть файлы превышающие длину пути в 260 символов! Чтобы быстрее работать с этим диском можно скачать другую версию программы https://github.com/AntonEvseev/FileSystemWithoutRecursion =)" }); }
             return li;
         }
 
@@ -127,7 +134,7 @@ namespace FileSystemWebApi.Models
                 {
                     li.Add(new FileInfoData { Puth = sDir + @"\", DirectoryName = dir.Substring(dir.LastIndexOf("\\") + 1), BackStap = ".." });
                 }
-                DirectoryInfo directory = new DirectoryInfo(id);
+                DirectoryInfo directory = new DirectoryInfo(sDir);
                 try
                 {
                     foreach (FileInfo file in directory.GetFiles())
@@ -156,7 +163,6 @@ namespace FileSystemWebApi.Models
                         int countSmall = 0;
                         int countMiddle = 0;
                         int countBig = 0;
-
                         foreach (string file in files)
                         {
                             FileInfo fi = new FileInfo(file);
@@ -176,12 +182,12 @@ namespace FileSystemWebApi.Models
                                     countBig++;
                                 }
                             }
-                            catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно количество файлов, т.к. есть файлы превышающие длину пути в 260 символов! Скачай другую версию программы https://github.com/AntonEvseev/FileSystemWithoutReflection =)" }); }
+                            catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно общее количество файлов на этом диске, т.к. есть файлы превышающие длину пути в 260 символов! Чтобы быстрее работать с этим диском можно скачать другую версию программы https://github.com/AntonEvseev/FileSystemWithoutRecursion =)" }); }
                         }
                         li.Add(new FileInfoData { SizeSmall = countSmall, SizeMiddle = countMiddle, SizeBig = countBig });
                     }
                 }
-                catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно количество файлов, т.к. есть файлы превышающие длину пути в 260 символов! Скачай другую версию программы https://github.com/AntonEvseev/FileSystemWithoutReflection =)" }); }
+                catch (PathTooLongException) { li.Add(new FileInfoData { Error = "Не возможно подсчитать корректно общее количество файлов на этом диске, т.к. есть файлы превышающие длину пути в 260 символов! Чтобы быстрее работать с этим диском можно скачать другую версию программы https://github.com/AntonEvseev/FileSystemWithoutRecursion =)" }); }
             }
             else
             {
