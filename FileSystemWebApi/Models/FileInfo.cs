@@ -14,5 +14,6 @@ namespace FileSystemWebApi.Models
         public string Puth { get; set; }
         public string FileName { get; set; }
         public string Error { get; set; }
+        public string BackStap { get; set; }
     }
 }

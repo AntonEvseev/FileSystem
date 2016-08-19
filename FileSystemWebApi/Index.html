@@ -32,9 +32,10 @@
                 Current path: <span ng-bind="li[0].Puth">{{FileInfo.Puth}}</span>
                 <br />
                 <br />
+                <a href="" ng-click="backList(li[0].Puth)" ng-bind="li[0].BackStap">{{FileInfo.BackStap}}</a> <!-- -->
                 <ul ng-repeat="FileInfo in li">
                     <li>
-                        <a href="" ng-click="someMethod(FileInfo.Puth + FileInfo.DirectoryName)">{{FileInfo.DirectoryName}}</a>
+                        <a href="" ng-click="startSearchFile(FileInfo.Puth + FileInfo.DirectoryName)">{{FileInfo.DirectoryName}}</a>
                     </li>
                 </ul>
                 <ul ng-repeat="FileInfo in li">
@@ -52,12 +53,19 @@
                 $scope.li = response;
             });
 
-            $scope.someMethod = function (path) {
+            $scope.startSearchFile = function (path) {
 
                 $http.get("http://localhost:58303/api/FileInfoDataes/findAll?id=" + path).success(function (response) {
                     $scope.li = response;
                 });
             };
+            //
+            $scope.backList = function (path) {
+
+                $http.post("http://localhost:58303/api/FileInfoDataes/findAll?id=" + path).success(function (response) {
+                    $scope.li = response;
+                });
+            };//
         });
     </script>
     <script src="Scripts/jquery-2.2.1.min.js"></script>
