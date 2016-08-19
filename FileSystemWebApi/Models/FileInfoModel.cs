@@ -30,7 +30,7 @@ namespace FileSystemWebApi.Models
             List<string> dirs = new List<string>(Directory.EnumerateDirectories(sDir));
             foreach (var dir in dirs)
                     {
-                        li.Add(new FileInfoData { Puth = sDir + "/",  DirectoryName = dir.Substring(dir.LastIndexOf("\\") + 1) });
+                        li.Add(new FileInfoData { Puth = sDir + @"\", DirectoryName = dir.Substring(dir.LastIndexOf("\\") + 1) });
                     }
             DirectoryInfo directory = new DirectoryInfo(id);
             try
